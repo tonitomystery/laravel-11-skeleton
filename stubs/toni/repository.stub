@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Contracts\{{interface}};
+use App\Models\{{model}};
+
+class {{class}} extends BaseRepository implements {{interface}}
+{
+  public $model = {{model}}::class;
+
+   // public function findById($id)
+    // {
+    //     return $this->model::useFilters()->findOrFail($id);
+    // }
+    // public function all()
+    // {
+    //     return $this->model::useFilters()->get();
+    // }
+    // public function create(array $data)
+    // {
+    //     return $this->model::create($data);
+    // }
+    // public function update($model, array $data)
+    // {
+    //     $model->update($data);
+    //     return $model;
+    // }
+    // public function delete($model)
+    // {
+    //     $model->delete();
+    // }
+}
