@@ -1,0 +1,35 @@
+stages:
+  - build
+
+variables:
+  ZIP_FILE: code-$CI_COMMIT_SHA.zip
+
+cache:
+  key: "$CI_PIPELINE_ID"
+  paths:
+    - node_modules
+    - vendor
+
+build:
+  stage: build
+  image:
+    name: amazon/aws-cli:2.16.11
+    entrypoint: [""]
+  script:
+    - zip $ZIP_FILE -r * .[^.]* . -x "*.git/*" -x "node_modules/*" -x "vendor/*"
+    - aws s3 cp $ZIP_FILE s3://$S3_BUCKET_NAME/
+    - aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label $CI_COMMIT_SHA --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key=$ZIP_FILE
+    - aws elasticbeanstalk update-environment --environment-name $EB_ENV_NAME --version-label $CI_COMMIT_SHA
+
+  before_script:
+    - yum update -y
+    - yum install -y zip
+    - mkdir -p ~/.aws && touch ~/.aws/credentials
+    - echo "[default]" > ~/.aws/credentials
+    - echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+    - echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+    - echo "region = $AWS_REGION" >> ~/.aws/credentials
+  artifacts:
+    paths:
+      - $ZIP_FILE
+    expire_in: 1 week
