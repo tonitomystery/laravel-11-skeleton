@@ -2,6 +2,9 @@
 Este proyecto tiene configurado comandos para generar crud de un modelo con la documentacion de swagger, usa además el patron de diseño repository
 
 
+# CI/CD
+Tiene archivo de configuracion de gitlab para despliegue en
+
 ## Commands
 php artisan make:crud Order
 
